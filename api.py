@@ -58,13 +58,14 @@ class _State:
 _state = _State()
 
 
+import threading
+
 # ─────────────────────────────────────────────────────────────────────────────
-# Lifespan — initialisation au démarrage du serveur
+# Lifespan — initialisation en arrière-plan pour que le port s'ouvre vite
 # ─────────────────────────────────────────────────────────────────────────────
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Charge le pipeline une seule fois au démarrage du serveur."""
+def _init_pipeline():
+    """Charge le pipeline dans un thread séparé (non-bloquant)."""
     t0 = time.time()
     print("\n[RAG API] Démarrage du pipeline…")
 
@@ -72,14 +73,19 @@ async def lifespan(app: FastAPI):
     _state.n_docs = len(docs)
 
     _state.pipeline = OptimizedRAGPipeline(top_k=3)
-    _state.pipeline.index_documents(docs)          # utilise le cache si dispo
+    _state.pipeline.index_documents(docs)
 
     _state.startup_time = round(time.time() - t0, 3)
     print(f"[RAG API] Prêt en {_state.startup_time}s — "
           f"{_state.pipeline.get_stats()['n_chunks']} chunks indexés\n")
 
-    yield  # l'application tourne ici
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lance l'init en background pour libérer le port immédiatement."""
+    thread = threading.Thread(target=_init_pipeline, daemon=True)
+    thread.start()
+    yield  # le port s'ouvre tout de suite
     print("[RAG API] Arrêt.")
 
 
