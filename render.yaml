@@ -5,7 +5,7 @@ services:
   - type: web
     name: rag-pipeline-api
     runtime: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
     startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
     plan: free
     envVars:
