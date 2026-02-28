@@ -1,0 +1,16 @@
+from data_loader import load_documents
+from pathlib import Path
+
+docs = load_documents(r"C:\Users\DELL\Downloads\enzymes-20260227T203523Z-1-001\enzymes")
+
+output = Path("extracted_texts.txt")
+with output.open("w", encoding="utf-8") as f:
+    for doc in docs:
+        f.write(f"{'='*60}\n")
+        f.write(f"ID    : {doc['id']}\n")
+        f.write(f"Titre : {doc['title']}\n")
+        f.write(f"Mots  : {len(doc['content'].split())}\n\n")
+        f.write(doc['content'])
+        f.write(f"\n\n")
+
+print(f"✅ Textes exportés dans : {output.resolve()}")
