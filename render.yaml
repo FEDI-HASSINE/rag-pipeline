@@ -12,4 +12,4 @@ services:
       - key: RAG_DATA_FOLDER
         value: ./data/enzymes
       - key: PYTHON_VERSION
-        value: "3.11"
+        value: "3.11.9"
