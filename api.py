@@ -21,8 +21,12 @@ import time
 from contextlib import asynccontextmanager
 from typing import List, Optional
 
-os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
-os.environ.setdefault("HF_DATASETS_OFFLINE",  "1")
+# Offline mode : activé uniquement si le modèle est déjà en cache local
+import pathlib as _pl
+_cache = _pl.Path.home() / ".cache" / "huggingface" / "hub"
+if _cache.exists() and any(_cache.iterdir()):
+    os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+    os.environ.setdefault("HF_DATASETS_OFFLINE",  "1")
 
 logging.basicConfig(
     level=logging.WARNING,

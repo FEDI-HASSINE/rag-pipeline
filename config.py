@@ -28,7 +28,7 @@ except ImportError:
 # ─────────────────────────────────────────────────────────────────────────────
 DATA_FOLDER = Path(os.environ.get(
     "RAG_DATA_FOLDER",
-    Path(__file__).parent.parent / "data" / "enzymes"   # chemin relatif par défaut
+    Path(__file__).parent / "data" / "enzymes"   # dossier data/ à la racine du repo
 ))
 
 # ─────────────────────────────────────────────────────────────────────────────

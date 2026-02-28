@@ -1,0 +1,15 @@
+# render.yaml — Blueprint Render pour le déploiement de l'API FastAPI
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: rag-pipeline-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: RAG_DATA_FOLDER
+        value: ./data/enzymes
+      - key: PYTHON_VERSION
+        value: "3.11"

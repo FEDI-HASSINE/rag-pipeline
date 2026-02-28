@@ -13,9 +13,11 @@ import time
 import sys
 from pathlib import Path
 
-# ── Offline mode (avoid re-downloading model) ─────────────────────────────────
-os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
-os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
+# ── Offline mode : activé uniquement si le modèle est déjà en cache local ────
+_cache = Path.home() / ".cache" / "huggingface" / "hub"
+if _cache.exists() and any(_cache.iterdir()):
+    os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+    os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
 
 import streamlit as st
 import pandas as pd
